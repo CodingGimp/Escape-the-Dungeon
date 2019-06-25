@@ -110,22 +110,51 @@ def get_moves(player):
 
     return moves
 
-monster, door, player = get_locations()    
+def draw_map(player):
+    print(' _' * 5)
+    tile = "|{}"
 
-while True:
-    valid_moves = get_moves(player)
-    clear_screen()
-    print('Welcome to the dungeon!')
-    print('You\'re currently in room {}.'.format(player))
-    print('You can move {}.'.format(', '.join(valid_moves)))
-    print('Enter QUIT to quit.')
+    for cell in CELLS:
+        x, y = cell
+        if x < 4:
+            line_end = ''
+            if cell == player:
+                output = tile.format('X')
+            else:
+                output = tile.format('_')
+        else:
+            line_end = '\n'    
+            if cell == player:
+                output = tile.format('X|')
+            else:
+                output = tile.format('_|')
+        print(output, end=line_end)
 
-    move = input('> ').upper()
+def game_loop(): 
+    monster, door, player = get_locations()
 
-    if move == 'QUIT':
-       break  
-    if move in valid_moves:
-        player = move_player(player, move)
-    else:
-        print('Invalid move: There is a wall there.')
-        continue
+    while True:  
+        draw_map(player)
+        valid_moves = get_moves(player)
+
+        print('You\'re currently in room {}.'.format(player))
+        print('You can move {}.'.format(', '.join(valid_moves)))
+        print('Enter QUIT to quit.')
+
+        move = input('> ').upper()
+
+        if move == 'QUIT':
+            break  
+        if move in valid_moves:
+            player = move_player(player, move)
+        else:
+            input('Invalid move: There is a wall there.')
+        clear_screen()    
+
+clear_screen()
+print('Welcome to the dungeon!')
+input('Press ENTER to start!')
+clear_screen
+game_loop()
+
+    
